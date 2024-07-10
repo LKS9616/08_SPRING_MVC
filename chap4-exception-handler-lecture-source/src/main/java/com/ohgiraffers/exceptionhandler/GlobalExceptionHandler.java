@@ -1,10 +1,8 @@
 package com.ohgiraffers.exceptionhandler;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 
 // 전역 예외 처리를 담당
 @ControllerAdvice
