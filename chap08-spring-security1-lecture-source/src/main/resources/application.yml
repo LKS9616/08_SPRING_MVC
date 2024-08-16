@@ -3,3 +3,8 @@ logging:
     root: info
     com.ohgiraffers.security: debug
 
+spring:
+  security:
+    user:
+      name: user
+      password: 1234

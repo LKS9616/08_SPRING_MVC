@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/board")
 @Slf4j
-public class BoardControllerClass {
+public class BoardController {
     @GetMapping("/board")
-    public void board() {
-
-    }
+    public void board() {}
 }

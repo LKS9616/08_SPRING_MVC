@@ -13,17 +13,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.security.Security;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
     /***
-     * 정적파일에 대해서 인증 | 인가 섬사를 수행하지 않게 설정
+     * 정적파일에 대해서 인증 | 인가 검사를 수행하지 않게 설정
      * @return
      */
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/images/**");
@@ -31,7 +28,6 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         /*
          * - permitAll() : 모두허용
          * - authenticated() : 인증된 사용자만 허용
@@ -43,11 +39,12 @@ public class WebSecurityConfig {
                     .requestMatchers("/board/**").authenticated() // 인증된 사용자만 허용
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated();
-//            registry.anyRequest().permitAll(); 모든 요청 허용
+//            registry.anyRequest().permitAll(); // 모든 요청허용
         });
-        // 로그인 설정
+
+        // 로그인설정
         http.formLogin(configurer -> {
-            configurer.loginPage("/auth/login") // Get 로그인 폼 요청
+            configurer.loginPage("/auth/login") // Get로그인 폼 요청
                     .loginProcessingUrl("/auth/login") // POST 로그인 처리 URL
                     .usernameParameter("username")
                     .passwordParameter("password")
@@ -64,9 +61,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
+
 
     /*
     * Spring Security 관리되는 사용자타입
@@ -74,17 +70,22 @@ public class WebSecurityConfig {
     * - 사용자 UserDetails 타입
     * - 사용자를 조회하는 서비스 -> UserDetailsService
     * */
-
     @Bean
     public UserDetailsService userDetailsService() {
-        // 일반 사용자
-        UserDetails user = User.builder()
-                .username("user01").password(passwordEncoder().encode("1234")) // 1234를 암호화해서 저장
-                .roles("USER").build();
 
+        // 일반사용자
+        UserDetails user = User.builder()
+                .username("user01")
+                .password(passwordEncoder().encode("1234")) // 1234를 암호화해서 저장
+                .roles("USER")
+                .build();
 
         // 관리자
-        UserDetails admin = User.builder().username("hihi").password(passwordEncoder().encode("1234")).roles("USER", "ADMIN").build();
+        UserDetails admin = User.builder()
+                .username("hihi")
+                .password(passwordEncoder().encode("1234"))
+                .roles("USER","ADMIN")
+                .build();
 
         return new InMemoryUserDetailsManager(user, admin);
     }
